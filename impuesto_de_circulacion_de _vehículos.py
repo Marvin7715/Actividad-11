@@ -1,51 +1,62 @@
 propietarios = {}
 
 print(".........Control de vehículos.........")
-cantidad = int(input("¿Cuántos propietarios desea ingresar?: "))
+cantidad = int(input("¿Cuántos propietarios desea registrar?: "))
 
 for i in range(cantidad):
-    print(f"\nUsuario #{i + 1}:")
-
+    print(f"\nPropietario #{i + 1}:")
     while True:
-        nit = input("Número de identificación (NIT) (ej. 1234567890101): ").strip()
+        nit = input("Identificación (NIT): ").strip()
         if nit in propietarios:
-            print("Este nit ya existe. Ingrese un nit diferente.")
+            print("Este NIT ya existe. Ingrese uno diferente.")
         else:
             break
-
-    nombre_completo = input("Nombre completo del propietario: ").strip()
-    telefono = int(input("¿Cuál es el numero de telefono del propietario?: "))
-
-    propietarios[nit] = {
-        "nombre": nombre_completo,
-        "telefono": telefono
-    }
+    nombre = input("Nombre completo: ").strip()
+    telefono = input("Teléfono: ").strip()
+    cantidad_vehiculos = int(input("Cantidad de vehículos: "))
 
     vehiculos = {}
+    for j in range(cantidad_vehiculos):
+        print(f"\nVehículo #{j + 1}:")
+        while True:
+            placa = input("Placa: ").strip().upper()
+            if placa in vehiculos:
+                print("Esta placa ya fue ingresada para este propietario.")
+            else:
+                break
+        marca = input("Marca: ").strip().upper()
+        modelo = input("Modelo: ").strip().upper()
+        anio = int(input("Año: "))
+        impuesto = input("¿Pagó el impuesto? (Sí/No): ").strip().lower()
+        impuesto_pagado = "Sí" if impuesto in ("sí", "si", "s") else "No"
 
-    cantidad_vehiculos = int(input("Ingrese la cantidad de vehículos que posee el propietario: "))
+        vehiculos[placa] = {
+            "marca": marca,
+            "modelo": modelo,
+            "año": anio,
+            "impuesto_pagado": impuesto_pagado
+        }
 
-    placa = input("Ingrese el numero de placa del vehiculo: ").strip().upper()
-    marca = input("Ingrese la marca del vehiculo: ").strip().upper()
-    modelo = input("Ingrese el modelo del vehiculo: ").strip()
-    anio = int(input("Ingrese el año de fabricación del vehiculo: "))
-    estado_del_impuesto =input("¿El impuesto del vehículo esta pagado? (SI/NO): ")
+    propietarios[nit] = {
+        "nombre": nombre,
+        "telefono": telefono,
+        "vehiculos": vehiculos
+    }
 
-    propietarios [placa] ={
-        "placa": placa,
-        "marca": marca,
-        "modelo": modelo,
-        "anio": anio,
-        "impuesto": estado_del_impuesto
-}
-
-print("\nLista de propietarios registrados:")
+print("\nResumen de propietarios:")
+total_pagados = 0
+total_no_pagados = 0
 for nit, datos in propietarios.items():
-    print(f"\nNúmero de Identificacíon: {nit}")
+    print(f"\nIdentificación: {nit}")
     print(f"Nombre: {datos['nombre']}")
-    print(f"Telefono: {datos['telefono']}")
-for placa, datos in propietarios.items():
-    print(f"Número de placa: {datos['placa']}")
-    print(f"Marca del vehiculo: {datos['marca']}")
-    print(f"Año del vehiculo: {datos['anio']}")
-    print(f"Impuesto pagado: {datos['impuesto']}")
+    print(f"Teléfono: {datos['telefono']}")
+    print("Vehículos:")
+    for placa, v in datos["vehiculos"].items():
+        print(f"  - Placa: {placa} | {v['marca']} {v['modelo']} ({v['año']}) | Impuesto: {v['impuesto_pagado']}")
+        if v["impuesto_pagado"] == "Sí":
+            total_pagados += 1
+        else:
+            total_no_pagados += 1
+
+print(f"\nTotal de vehículos con impuesto pagado: {total_pagados}")
+print(f"Total de vehículos sin pagar: {total_no_pagados}")
